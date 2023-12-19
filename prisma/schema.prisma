@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//ini instropection
+model test {
+  id       Int    @id @default(autoincrement())
+  username String @db.VarChar(250)
+  password String
+}
+
+//ini migration
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String   @map("firstName")
+  role    String?
+  profile Profile?
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  userId Int    @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
