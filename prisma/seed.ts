@@ -6,13 +6,13 @@ const userData: Prisma.UserCreateInput[] = [
   {
     name: "John",
     email: "John@prisma.io",
-    post: {
+    posts: {
       create: [
         {
           title: "Join the Prisma Slack",
           published: true,
           likeNum: 10,
-          catgories: {
+          categories: {
             create: [
               {
                 name: "Data Base",
@@ -25,7 +25,7 @@ const userData: Prisma.UserCreateInput[] = [
         },
         {
           title: "Follow Prisma on Twitter",
-          catgories: {
+          categories: {
             connect: [
               {
                 id: 1,
@@ -44,7 +44,7 @@ const userData: Prisma.UserCreateInput[] = [
       create: [
         {
           title: "Follow Prisma on Twitter",
-          catgories: {
+          categories: {
             connect: [
               {
                 id: 1,
@@ -65,7 +65,7 @@ const userData: Prisma.UserCreateInput[] = [
           title: "Ask a question about Prisma on GitHub",
 
           published: true,
-          catgories: {
+          categories: {
             connect: [
               {
                 id: 2,
@@ -75,7 +75,7 @@ const userData: Prisma.UserCreateInput[] = [
         },
         {
           title: "Prisma on YouTube",
-          catgories: {
+          categories: {
             connect: [
               {
                 id: 1,
