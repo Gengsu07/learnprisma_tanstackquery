@@ -4,16 +4,23 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const post = await prisma.post.findMany({
     where: {
-      OR: [
-        {
-          title: { contains: "github", mode: "insensitive" },
+      author: {
+        isNot: {
+          name: "Jack",
         },
-        {
-          title: { contains: "Twitter" },
+        is: {
+          email: {
+            startsWith: "s",
+          },
         },
-      ],
-      AND: {
-        published: true,
+      },
+    },
+    select: {
+      title: true,
+      author: {
+        select: {
+          name: true,
+        },
       },
     },
   });
