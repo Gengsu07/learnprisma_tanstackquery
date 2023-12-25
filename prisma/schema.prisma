@@ -7,26 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//ini instropection
 model test {
   id       Int    @id @default(autoincrement())
   username String @db.VarChar(250)
   password String
 }
 
-//ini migration
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
   name    String   @map("firstName")
   role    Role     @default(USER)
-  profile Profile?
   posts   Post[]
-}
-
-enum Role {
-  USER
-  ADMIN
+  profile Profile?
 }
 
 model Profile {
@@ -42,14 +35,63 @@ model Post {
   published  Boolean    @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  likeNum    Int        @default(0)
   authorId   Int
+  likeNum    Int        @default(0)
   author     User       @relation(fields: [authorId], references: [id])
-  categories Category[]
+  categories Category[] @relation("CategoryToPost")
 }
 
 model Category {
   id    Int    @id @default(autoincrement())
   name  String
-  posts Post[]
+  posts Post[] @relation("CategoryToPost")
+}
+
+model mpn {
+  admin         String?
+  kdmap         String?
+  kdbayar       String?
+  masa          String?
+  masa2         String?
+  tahun         String?
+  tanggalbayar  Int?
+  bulanbayar    Int?
+  tahunbayar    Int?
+  datebayar     DateTime? @db.Date
+  nominal       Float?    @db.Real
+  ket           String?
+  seksi         String?
+  segmentasi_wp String?
+  jenis_wp      String?
+  nama_klu      String?
+  kd_kategori   String?
+  nm_kategori   String?
+  nm_golpok     String?
+  map           String?
+  npwp15        String?
+  nama_wp       String?
+  nama_ar       String?
+  ntpn          String?
+  id            Int       @id
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  NOT_STARTED
+  IN_PROGRESS
+  DONE
+}
+
+
+model Todo{
+  id         Int      @id @default(autoincrement())
+  title      String
+  description String?
+  status     Status @default(NOT_STARTED)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
