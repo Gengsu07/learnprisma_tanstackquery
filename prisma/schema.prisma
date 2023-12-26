@@ -89,7 +89,7 @@ enum Status {
 
 model Todo{
   id         Int      @id @default(autoincrement())
-  title      String
+  title      String @unique
   description String
   status     Status @default(NOT_STARTED)
   createdAt  DateTime @default(now())

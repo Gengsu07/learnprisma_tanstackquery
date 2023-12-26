@@ -69,7 +69,7 @@ const TodoForm = ({ params }: { params?: { id: string } }) => {
             <p className="text-red-500">{errors.description.message}</p>
           )}
           <textarea
-            placeholder={data?.description}
+            placeholder={data?.description ?? " "}
             {...register("description")}
             rows={5}
             className="px-3 py-3  border-2 outline-none border-none bg-white  rounded-md lg:py-5"

@@ -1,11 +1,12 @@
 "use client";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Ztodo } from "../../types/todo";
-import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { NextResponse } from "next/server";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+import { z } from "zod";
+import { Ztodo } from "../../types/todo";
 
 export type TTodo = z.infer<typeof Ztodo>;
 
@@ -13,31 +14,34 @@ const TodoForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitted },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<TTodo>({ resolver: zodResolver(Ztodo) });
   const router = useRouter();
 
-  const onSubmit = async (data: TTodo) => {
-    try {
-      const response = await axios.post("/api/todo", data);
-
-      if (response.status !== 200) {
-        reset();
-        alert("Submitting form failed!");
-        return;
-      }
+  const mutation = useMutation({
+    mutationFn: async (data: TTodo) => {
+      return await axios.post("/api/todo", data);
+    },
+    onMutate: () => {
+      toast.loading("Loading...");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Success", { duration: 5000 });
       reset();
-    } catch (error) {
-      throw Error;
-    }
-    if (isSubmitted) {
       router.push("/todo");
-    }
+    },
+  });
+  const onSubmit = async (data: TTodo) => {
+    return mutation.mutate(data);
   };
   return (
     <div className=" flex flex-col  justify-center items-center w-screen h-screen bg-stars bg-cover">
       <div className="flex flex-col max-md:gap-2 lg:gap-5 items-center justify-center max-sm:w-[90%] sm:w-3/5 lg:w-3/5 h-fit  rounded-lg isolate bg-slate-500/30 ring-1 ring-white/30 shadow-lg backdrop-filter backdrop-blur-md  ">
+        {mutation.isPending && <Toaster />}
         <h1 className="font-bold text-center text-white text-2xl font-mono mt-5 ">
           Input Todo List
         </h1>
@@ -79,11 +83,6 @@ const TodoForm = () => {
           >
             Submit
           </button>
-          {isSubmitting && (
-            <p className="text-white font-mono text-center">
-              Submitting...please wait
-            </p>
-          )}
         </form>
       </div>
     </div>
