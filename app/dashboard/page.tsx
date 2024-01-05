@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { DataTable } from "./datatable";
 import { columns } from "./columns";
@@ -17,12 +18,7 @@ export interface mpnSliced {
   datebayar: Date;
 }
 const Dashboard = () => {
-  const {
-    data: dataMPN,
-    isLoading,
-    isError,
-    error,
-  } = useQuery<mpnSliced[]>({
+  const { data, isLoading, isError, error } = useQuery<mpnSliced[]>({
     queryKey: ["mpn"],
     queryFn: () =>
       fetch("http://localhost:3000/api/mpn").then((res) => res.json()),
@@ -38,26 +34,30 @@ const Dashboard = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  //   const { data: dataSektor } = useQuery<Persektor[]>({
-  //     queryKey: ["sektor"],
-  //     queryFn: () =>
-  //       fetch("http://localhost:3000/api/mpn/persektor").then((res) =>
-  //         res.json()
-  //       ),
-  //     enabled: !!dataMPN,
-  //   });
-
-  //   if (isLoading) {
-  //     return <div>Loading...</div>;
-  //   }
-  //   if (isError) {
-  //     return <div>Error: {error.message}</div>;
-  //   }
-  //   console.log(dataMPN);
   return (
     <div>
-      <DataTable columns={columns} data={dataMPN!} />
+      {/* {data?.map((mpn) => (
+        <li key={mpn.id}>{mpn.npwp15}</li>
+      ))} */}
+      <DataTable columns={columns} data={data!} />
     </div>
   );
 };
 export default Dashboard;
+
+//   const { data: dataSektor } = useQuery<Persektor[]>({
+//     queryKey: ["sektor"],
+//     queryFn: () =>
+//       fetch("http://localhost:3000/api/mpn/persektor").then((res) =>
+//         res.json()
+//       ),
+//     enabled: !!dataMPN,
+//   });
+
+//   if (isLoading) {
+//     return <div>Loading...</div>;
+//   }
+//   if (isError) {
+//     return <div>Error: {error.message}</div>;
+//   }
+//   console.log(dataMPN);
